@@ -1,11 +1,10 @@
-package com.example.Library.domain;
+package com.example.Library.domain.Entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Cascade;
 
 @Data
 @AllArgsConstructor
@@ -13,7 +12,7 @@ import org.hibernate.annotations.Cascade;
 @Builder
 @Entity
 @Table(name="books")
-public class Book {
+public class BookEntity {
 
     @Id
     private String isbn;
@@ -22,6 +21,6 @@ public class Book {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="author_id")
-    private Author author;
+    private AuthorEntity authorEntity;
 
 }
