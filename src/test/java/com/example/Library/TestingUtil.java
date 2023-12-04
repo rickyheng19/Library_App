@@ -1,4 +1,6 @@
 package com.example.Library;
+import com.example.Library.domain.DTO.AuthorDTO;
+import com.example.Library.domain.DTO.BookDTO;
 import com.example.Library.domain.Entities.AuthorEntity;
 import com.example.Library.domain.Entities.BookEntity;
 
@@ -31,11 +33,19 @@ public class TestingUtil {
                 .build();
     }
 
-    public static BookEntity createTestBookA(final AuthorEntity authorEntity) {
+    public static BookEntity createTestBookEntityA(final AuthorEntity authorEntity) {
         return BookEntity.builder()
                 .isbn("978-1-2345-6789-0")
                 .title("The Shadow in the Attic")
                 .authorEntity(authorEntity)
+                .build();
+    }
+
+    public static BookDTO createTestBookDtoA(final AuthorDTO authorDTO) {
+        return BookDTO.builder()
+                .isbn("978-1-2345-6789-0")
+                .title("The Shadow in the Attic")
+                .authorEntity(authorDTO)
                 .build();
     }
 
@@ -46,6 +56,7 @@ public class TestingUtil {
                 .authorEntity(authorEntity)
                 .build();
     }
+
 
     public static BookEntity createTestBookC(final AuthorEntity authorEntity) {
         return BookEntity.builder()
