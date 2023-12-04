@@ -1,5 +1,6 @@
 package com.example.Library.Controllers;
 
+import com.example.Library.Services.AuthorService;
 import com.example.Library.TestingUtil;
 import com.example.Library.domain.Entities.AuthorEntity;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -23,12 +24,14 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class AuthorControllerIntegrationTest {
 
+    private AuthorService authorService;
     private MockMvc mockMvc;
     private ObjectMapper objectMapper;
 
     @Autowired
-    public AuthorControllerIntegrationTest(MockMvc mockMvc) {
+    public AuthorControllerIntegrationTest(MockMvc mockMvc, AuthorService authorService) {
         this.mockMvc = mockMvc;
+        this.authorService = authorService;
         this.objectMapper = new ObjectMapper();
     }
 
@@ -51,5 +54,26 @@ public class AuthorControllerIntegrationTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Abigail Rose"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.age").value("80"));
 
+    }
+
+    @Test
+    public void testThatListAuthorsReturnsHttpStatus200() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/authors")
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void testThatListAuthorsReturnsListOfAuthors() throws Exception {
+        AuthorEntity testAuthorEntityA = TestingUtil.createTestAuthorA();
+        authorService.createAuthor(testAuthorEntityA);
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/authors")
+                        .contentType(MediaType.APPLICATION_JSON)
+                ).andExpect(MockMvcResultMatchers.jsonPath("$[0].id").isNumber()
+                ).andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("Abigail Rose")
+                ).andExpect(MockMvcResultMatchers.jsonPath("$[0].age").value("80")
+        );
     }
 }
