@@ -1,7 +1,9 @@
 package com.example.Library.Controllers;
 
+import com.example.Library.Services.BookService;
 import com.example.Library.TestingUtil;
 import com.example.Library.domain.DTO.BookDTO;
+import com.example.Library.domain.Entities.BookEntity;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -25,10 +27,13 @@ public class BookControllerIntegrationTests {
 
     private ObjectMapper objectMapper;
 
+    private BookService bookService;
+
     @Autowired
-    public BookControllerIntegrationTests(MockMvc mockMvc) {
+    public BookControllerIntegrationTests(MockMvc mockMvc, BookService bookService) {
         this.mockMvc = mockMvc;
         this.objectMapper = new ObjectMapper();
+        this.bookService = bookService;
     }
 
     @Test
@@ -59,5 +64,29 @@ public class BookControllerIntegrationTests {
                 MockMvcResultMatchers.jsonPath("$.title").value(bookDTO.getTitle())
         );
 
+    }
+
+    @Test
+    public void testThatListBookReturnsHttpStatus200() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/books")
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+                MockMvcResultMatchers.status().isOk()
+        );
+    }
+
+    @Test
+    public void testThatListBookReturnsBook() throws Exception {
+        BookEntity testBookEntityA = TestingUtil.createTestBookEntityA(null);
+        bookService.createBook(testBookEntityA.getIsbn(), testBookEntityA);
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/books")
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$[0].isbn").value("978-1-2345-6789-1")
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$[0].title").value("The Shadow in the Attic")
+        );
     }
 }

@@ -6,10 +6,10 @@ import com.example.Library.domain.Entities.BookEntity;
 import com.example.Library.mappers.Mapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class BookController {
@@ -29,5 +29,11 @@ public class BookController {
         BookEntity savedBookEntity = bookService.createBook(isbn, bookEntity);
         BookDTO savedBookDTO = bookMapper.mapTo(savedBookEntity);
         return new ResponseEntity<>(savedBookDTO, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/books")
+    public List<BookDTO> listBooks() {
+        List<BookEntity> books = bookService.findAll();
+        return books.stream().map(bookMapper::mapTo).collect(Collectors.toList());
     }
 }
