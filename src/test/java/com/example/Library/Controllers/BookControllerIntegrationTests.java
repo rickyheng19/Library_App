@@ -89,4 +89,26 @@ public class BookControllerIntegrationTests {
                 MockMvcResultMatchers.jsonPath("$[0].title").value("The Shadow in the Attic")
         );
     }
+
+    @Test
+    public void testThatGetBookReturnsHttpStatus200OkWhenBookExist() throws Exception {
+        BookEntity testBookEntityA = TestingUtil.createTestBookEntityA(null);
+        bookService.createBook(testBookEntityA.getIsbn(), testBookEntityA);
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/books/" + testBookEntityA.getIsbn())
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+                MockMvcResultMatchers.status().isOk()
+        );
+    }
+
+    @Test
+    public void testThatGetBookReturnsHttpStatus404WhenBookDoesntExist() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/books/978-1-2345-6789-99")
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+                MockMvcResultMatchers.status().isNotFound()
+        );
+    }
 }

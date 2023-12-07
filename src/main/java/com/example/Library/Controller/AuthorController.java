@@ -48,5 +48,8 @@ public class AuthorController {
         }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    @PutMapping(path = "/authors/{id}")
+    public 
+
 
 }
