@@ -27,7 +27,7 @@ public class AuthorController {
     @PostMapping(path = "/authors")
     public ResponseEntity<AuthorDTO> createAuthor(@RequestBody AuthorDTO author) {
         AuthorEntity authorEntity = authorMapper.mapFrom(author);
-        AuthorEntity savedAuthorEntity = authorService.createAuthor(authorEntity);
+        AuthorEntity savedAuthorEntity = authorService.save(authorEntity);
         return new ResponseEntity<>(authorMapper.mapTo(savedAuthorEntity), HttpStatus.CREATED);
     }
 
@@ -49,7 +49,17 @@ public class AuthorController {
     }
 
     @PutMapping(path = "/authors/{id}")
-    public 
+    public ResponseEntity<AuthorDTO> fullUpdateAuthor(@PathVariable("id") Long id, @RequestBody AuthorDTO authorDTO) {
+
+        if (!authorService.isExist(id)) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        authorDTO.setId(id);
+        AuthorEntity authorEntity = authorMapper.mapFrom(authorDTO);
+        AuthorEntity savedAuthorEntity = authorService.save(authorEntity);
+        return new ResponseEntity<>(authorMapper.mapTo(savedAuthorEntity), HttpStatus.OK);
+    }
 
 
 }
