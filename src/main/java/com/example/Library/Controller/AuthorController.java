@@ -4,6 +4,7 @@ import com.example.Library.Services.AuthorService;
 import com.example.Library.domain.DTO.AuthorDTO;
 import com.example.Library.domain.Entities.AuthorEntity;
 import com.example.Library.mappers.Mapper;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -71,6 +72,12 @@ public class AuthorController {
         AuthorEntity authorEntity = authorMapper.mapFrom(authorDTO);
         AuthorEntity updatedAuthor = authorService.partialUpdate(id, authorEntity);
         return new ResponseEntity<>(authorMapper.mapTo(updatedAuthor), HttpStatus.OK);
+    }
+
+    @DeleteMapping(path = "/authors/{id}")
+    public ResponseEntity deleteAuthors(@PathVariable("id") Long id) {
+        authorService.delete(id);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
 
