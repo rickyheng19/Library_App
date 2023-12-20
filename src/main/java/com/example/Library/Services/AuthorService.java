@@ -1,5 +1,6 @@
 package com.example.Library.Services;
 
+import com.example.Library.domain.DTO.AuthorDTO;
 import com.example.Library.domain.Entities.AuthorEntity;
 import org.springframework.stereotype.Component;
 
@@ -15,4 +16,8 @@ public interface AuthorService {
     Optional<AuthorEntity> findOne(Long id);
 
     boolean isExist(Long id);
+
+    AuthorEntity partialUpdate(Long id, AuthorEntity authorEntity);
+
+    void delete(Long id);
 }
